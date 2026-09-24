@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Should I Wear?</title>
+  <style>
+    :root { --ink:#183a39; --cream:#fffdf7; --sage:#dce9d1; --coral:#df7558; --line:#dce2d8; --muted:#61706b; }
+    * { box-sizing:border-box; } body { margin:0; min-height:100vh; background:var(--cream); color:var(--ink); font-family:Arial,Helvetica,sans-serif; }
+    .page { width:min(100% - 32px,760px); margin:auto; padding:24px 0 48px; } header { padding:26px 24px 104px; background:var(--sage); border-radius:14px 14px 0 0; position:relative; overflow:hidden; } header::after { content:"☀"; position:absolute; right:21px; top:5px; color:#f7c846; font-size:118px; line-height:1; }
+    .tag { font-size:11px; font-weight:bold; letter-spacing:1.2px; color:#587065; margin:0 0 13px; } h1 { font-family:Georgia,serif; font-size:clamp(38px,9vw,61px); line-height:.96; letter-spacing:-2.5px; max-width:510px; margin:0; position:relative; z-index:1; } h1 em { color:var(--coral); } header p { color:#4d625a; font-size:15px; line-height:1.5; max-width:400px; margin:18px 0 0; position:relative; z-index:1; }
+    .card { position:relative; margin:-69px 16px 0; padding:26px; background:#fff; border:1px solid var(--line); border-radius:10px; box-shadow:0 14px 35px rgba(31,66,55,.12); } h2 { font-size:20px; letter-spacing:-.5px; margin:0 0 5px; } .subhead { color:var(--muted); font-size:14px; margin:0 0 24px; }
+    label,legend { font-size:14px; font-weight:bold; display:block; margin-bottom:9px; } .field { margin:0 0 25px; } input[type=text] { width:100%; border:1px solid #bfc9bf; border-radius:6px; padding:13px 14px; font-size:17px; color:var(--ink); outline-color:var(--coral); }
+    .connection-note { display:flex; align-items:flex-start; gap:8px; margin:-12px 0 24px; padding:10px 11px; border-radius:5px; background:#f5f7f0; color:#66736d; font-size:12px; line-height:1.4; } .connection-note strong { color:var(--ink); }
+    fieldset { border:0; margin:0; padding:0; } .options { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; } .option input { position:absolute; opacity:0; } .option label { min-height:76px; display:flex; align-items:center; justify-content:center; text-align:center; border:1px solid #cfd8cf; border-radius:6px; padding:9px; margin:0; color:#53635c; font-size:13px; cursor:pointer; } .option input:checked + label { border:2px solid var(--ink); color:var(--ink); background:#edf3e9; }
+    button { width:100%; border:0; border-radius:6px; background:var(--ink); color:white; font-size:16px; font-weight:bold; padding:15px; cursor:pointer; } button:hover { background:#24524f; } button:disabled { opacity:.65; cursor:wait; } button:focus-visible,input:focus-visible { outline:3px solid #f6ca65; outline-offset:2px; }
+    .error,.loading { display:none; margin:15px 0 0; padding:11px 12px; border-radius:5px; font-size:14px; } .error { color:#a13d29; background:#fff0ed; } .error.show { display:block; } .loading { background:#eaf2e6; color:#476258; } .loading.show { display:flex; align-items:center; gap:9px; } .spinner { width:15px; height:15px; border:2px solid #a8c1a9; border-top-color:var(--ink); border-radius:50%; animation:spin .7s linear infinite; } @keyframes spin { to { transform:rotate(360deg); } }
+    .result { display:none; scroll-margin-top:22px; margin:32px 16px 0; overflow:hidden; border:2px solid var(--ink); border-radius:12px; background:#fffdf7; box-shadow:0 18px 40px rgba(24,58,57,.22),0 3px 0 var(--coral); } .result.show { display:grid; grid-template-columns:230px 1fr; animation:result-in .48s cubic-bezier(.2,.8,.25,1) both; } @keyframes result-in { from { opacity:0; transform:translateY(22px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+    .preview { min-height:100%; padding:18px 14px; background:#dce9d1; border-right:1px solid #adc0ae; display:grid; grid-template-columns:1fr 1fr; align-content:center; gap:9px; } .preview-label { grid-column:1/-1; margin:0 0 2px; text-align:center; color:#476058; font-size:10px; font-weight:bold; letter-spacing:1px; } .garment { min-height:91px; padding:8px 4px 6px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#f8fbf5; border:1px solid #b9cbbb; border-radius:7px; color:var(--ink); } .garment svg { width:43px; height:46px; stroke:currentColor; fill:none; stroke-width:2.3; stroke-linecap:round; stroke-linejoin:round; } .garment .fill { fill:currentColor; stroke:none; opacity:.9; } .garment span { margin-top:4px; font-size:10px; text-align:center; color:#496158; } .garment.top { color:#d46f55; } .garment.bottom { color:#426170; } .garment.shoes { color:#365149; } .garment.outer { color:#5d726a; } .garment.rain { color:#42677a; }
+    .result-copy { padding:27px 28px 29px; } .result .tag { color:#a85843; } .result h2 { font-family:Georgia,serif; font-size:28px; } .weather-summary { margin:0 0 21px; padding:14px; border:1px solid #d4e0d0; border-radius:7px; background:#f3f8f0; } .weather-place { display:flex; justify-content:space-between; gap:8px; align-items:baseline; margin-bottom:11px; } .weather-place strong { font-size:15px; } .weather-place span { color:#60736a; font-size:12px; text-align:right; } .weather-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; } .weather-stat span { display:block; color:#718079; font-size:10px; font-weight:bold; letter-spacing:.5px; text-transform:uppercase; } .weather-stat b { display:block; margin-top:3px; color:var(--ink); font-size:15px; white-space:nowrap; }
+    .pieces { display:flex; flex-wrap:wrap; gap:8px; margin:18px 0; } .pieces span { background:#fffaf1; border:1px solid #e4cdb1; border-radius:99px; padding:7px 10px; font-size:13px; } .explanation { margin:0; color:#52605a; font-size:14px; line-height:1.55; } footer { text-align:center; color:#7d8983; font-size:12px; margin-top:30px; }
+    @media (max-width:520px) { .page{width:100%;padding-top:0}.card,.result{margin-left:12px;margin-right:12px}.options{grid-template-columns:1fr}.option label{min-height:47px}.page header{border-radius:0;padding-bottom:92px}.card{padding:22px}.result.show{grid-template-columns:1fr}.preview{grid-template-columns:repeat(4,1fr);border-right:0;border-bottom:1px solid #adc0ae;padding:13px 10px}.preview-label{display:none}.garment{min-height:72px;padding:5px 2px}.garment svg{width:34px;height:36px}.garment span{font-size:9px}.result-copy{padding:23px 20px 25px}.result h2{font-size:25px}.weather-stats{grid-template-columns:repeat(2,1fr)} }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header><p class="tag">A SMALL DAILY HELPER</p><h1>What should<br>I <em>wear?</em></h1><p>A practical outfit idea for your real weather and your plans — without the overthinking.</p></header>
+    <section class="card" aria-labelledby="details-heading">
+      <h2 id="details-heading">Tell me where you are going</h2><p class="subhead">We’ll check the live local forecast, then build a look around your plans.</p>
+      <form id="outfit-form" novalidate>
+        <div class="field"><label for="location">Your location</label><input id="location" type="text" placeholder="City, state or ZIP code" autocomplete="postal-code" aria-describedby="location-error"></div>
+        <p class="connection-note"><span>◉</span><span><strong>Internet required.</strong> This page checks live weather with Open-Meteo.</span></p>
+        <fieldset class="field"><legend>Where are you going?</legend><div class="options">
+          <div class="option"><input type="radio" name="occasion" value="class" id="class" checked><label for="class">📚<br>Class</label></div>
+          <div class="option"><input type="radio" name="occasion" value="casual" id="casual"><label for="casual">☕<br>Casual outing</label></div>
+          <div class="option"><input type="radio" name="occasion" value="formal" id="formal"><label for="formal">✦<br>Formal event</label></div>
+        </div></fieldset>
+        <button type="submit" id="suggest-button">Check weather &amp; suggest →</button>
+        <p class="loading" id="loading" role="status"><span class="spinner"></span> Finding today’s weather…</p><p class="error" id="location-error" role="alert"></p>
+      </form>
+    </section>
+    <section class="result" id="result" aria-live="polite" aria-labelledby="result-title">
+      <div class="preview" id="preview" aria-label="Visual outfit preview"></div>
+      <div class="result-copy"><p class="tag">TODAY IN <span id="location-name"></span></p><div class="weather-summary" id="weather-summary"></div><p class="tag">YOUR OUTFIT IDEA</p><h2 id="result-title"></h2><div class="pieces" id="pieces"></div><p class="explanation" id="explanation"></p></div>
+    </section>
+    <footer>Live weather from Open-Meteo · Made for less “I have nothing to wear.”</footer>
+  </main>
+  <script>
+    const form = document.getElementById('outfit-form');
+    const locationInput = document.getElementById('location');
+    const error = document.getElementById('location-error');
+    const loading = document.getElementById('loading');
+    const button = document.getElementById('suggest-button');
+    const result = document.getElementById('result');
+    const weatherLabels = { 0:'Clear sky',1:'Mostly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Rime fog',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',56:'Freezing drizzle',57:'Heavy freezing drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',66:'Freezing rain',67:'Heavy freezing rain',71:'Light snow',73:'Snow',75:'Heavy snow',77:'Snow grains',80:'Rain showers',81:'Rain showers',82:'Heavy rain showers',85:'Snow showers',86:'Heavy snow showers',95:'Thunderstorms',96:'Thunderstorms with hail',99:'Severe thunderstorms with hail' };
+    const looks = {
+      class: { freezing:['thermal crewneck','dark straight-leg jeans','weatherproof boots','hoodie','pants','boot'], cold:['chunky knit sweater','relaxed denim','leather sneakers','hoodie','pants','sneaker'], cool:['long-sleeve tee','utility pants','canvas sneakers','tee','pants','sneaker'], mild:['cotton T-shirt','straight-leg chinos','clean sneakers','tee','pants','sneaker'], warm:['breathable pocket tee','lightweight chinos','mesh sneakers','tee','shorts','sneaker'] },
+      casual: { freezing:['brushed flannel over a thermal','dark denim','lug-sole boots','hoodie','pants','boot'], cold:['soft crewneck sweater','black jeans','ankle boots','hoodie','pants','boot'], cool:['striped long-sleeve top','relaxed jeans','retro sneakers','tee','pants','sneaker'], mild:['boxy cotton tee','easy trousers','low-profile sneakers','tee','pants','sneaker'], warm:['linen camp shirt','tailored shorts','leather sandals','shirt','shorts','sneaker'] },
+      formal: { freezing:['fine-gauge mock neck','wool trousers','polished boots','hoodie','pants','dressshoe'], cold:['button-down with a merino layer','tailored trousers','polished leather shoes','shirt','pants','dressshoe'], cool:['crisp button-down or blouse','tailored trousers','dress shoes','shirt','pants','dressshoe'], mild:['structured blouse or button-down','midi skirt or tailored trousers','dress shoes','shirt','skirt','dressshoe'], warm:['lightweight poplin shirt or blouse','breathable tailored trousers','simple dress shoes','shirt','pants','dressshoe'] }
+    };
+    function weatherBand(feels) { if (feels <= 32) return 'freezing'; if (feels < 50) return 'cold'; if (feels < 61) return 'cool'; if (feels <= 75) return 'mild'; return 'warm'; }
+    function isWet(code, chance) { return chance >= 50 || [51,53,55,56,57,61,63,65,66,67,71,73,75,77,80,81,82,85,86,95,96,99].includes(code); }
+    function outfitFor(weather, occasion) {
+      const band = weatherBand(weather.feels); const base = looks[occasion][band]; const wet = isWet(weather.code, weather.precip); const windy = Math.max(weather.wind, weather.windMax) >= 22; const swing = weather.high - weather.low >= 18;
+      const items = [`Top: ${base[0]}`,`Bottom: ${base[1]}`]; let outer = '';
+      if (wet) outer = occasion === 'formal' ? 'a water-resistant trench or tailored raincoat' : 'a hooded water-resistant rain shell';
+      else if (band === 'freezing') outer = 'an insulated coat';
+      else if (band === 'cold') outer = windy ? 'a windproof wool coat' : 'a warm wool-blend jacket';
+      else if (windy) outer = 'a windproof light jacket';
+      else if (swing) outer = occasion === 'formal' ? 'a removable blazer' : 'a removable overshirt or light jacket';
+      if (outer) items.push(`Outer layer: ${outer}`); items.push(`Shoes: ${wet ? (occasion === 'formal' ? 'water-resistant leather shoes' : 'waterproof boots or treated sneakers') : base[2]}`);
+      const accessories = []; if (wet) accessories.push('compact umbrella'); if (band === 'freezing') accessories.push('warm scarf'); if (windy) accessories.push('secure hat or hair tie'); if (swing && !wet) accessories.push('small tote for your removable layer'); if (band === 'warm') accessories.push('sunglasses and water bottle'); if (accessories.length) items.push(`Accessories: ${accessories.join(', ')}`);
+      const temperatureText = `It feels like ${Math.round(weather.feels)}°F now, with a ${Math.round(weather.low)}–${Math.round(weather.high)}°F range.`;
+      const rangeText = swing ? ' The large temperature swing makes removable layers especially useful.' : '';
+      const wetText = wet ? ` With a ${Math.round(weather.precip)}% maximum rain chance, rain protection is built in.` : '';
+      const windText = windy ? ` Wind near ${Math.round(Math.max(weather.wind, weather.windMax))} mph calls for a more secure outer layer.` : '';
+      return { title: wet ? 'A weather-ready look with a polished plan' : band === 'warm' ? 'A breathable look for a warm day' : 'A layered look that fits the forecast', items, explanation:`${temperatureText}${rangeText}${wetText}${windText} These choices are tailored for ${occasion === 'class' ? 'a day of class' : occasion === 'casual' ? 'a casual outing' : 'a formal event'}.`, visual:{ top:base[3], bottom:base[4], shoes:wet ? 'boot' : base[5], outer:outer ? 'jacket' : null, rain:wet } };
+    }
+    const art = {
+      hoodie:'<path d="M12 42V22l7-8 5 5 5-5 7 8v20"/><path d="M19 14c0 7 10 7 10 0M12 23l-7 7 5 8 5-6M36 23l7 7-5 8-5-6"/><path d="M19 42v-8h10v8"/>', tee:'<path d="M13 42V19l8-5 3 4 3-4 8 5v23"/><path d="M13 19 5 24l5 8 5-5M35 19l8 5-5 8-5-5"/><path d="M21 14c0 5 6 5 6 0"/>', shirt:'<path d="M14 42V18l10-5 10 5v24"/><path d="M19 14l5 9 5-9M24 22v20M14 18l-8 7 5 7 5-5M34 18l8 7-5 7-5-5"/><circle cx="24" cy="29" r="1" class="fill"/><circle cx="24" cy="35" r="1" class="fill"/>', pants:'<path d="M14 10h20l-2 32H24l-1-18-2 18h-8l2-32Z"/><path d="M14 16h20"/>', shorts:'<path d="M13 13h22l-2 22h-9l-1-11-2 11h-9l1-22Z"/><path d="M13 18h22"/>', skirt:'<path d="M18 12h12l7 30H11l7-30Z"/><path d="M18 12h12M16 24h16"/>', sneaker:'<path d="M6 31h11l5-10 8 7 11 3c3 1 4 4 2 7H6v-7Z"/><path d="M17 31h15M10 38h31"/>', dressshoe:'<path d="M7 33h14l4-11 6 8 10 2c3 1 4 4 2 6H7v-5Z"/><path d="M8 38h35"/>', boot:'<path d="M12 10h14v20l12 3c4 1 5 5 2 7H8v-8l4-3V10Z"/><path d="M8 40h32"/>', jacket:'<path d="M13 42V19l11-7 11 7v23"/><path d="M18 14l6 10 6-10M24 24v18M13 19 6 27l6 7 6-8M35 19l7 8-6 7-6-8"/>', umbrella:'<path d="M5 23c4-10 34-10 38 0-5-3-9-3-13 0-4-3-8-3-12 0-4-3-8-3-13 0Z"/><path d="M24 23v16c0 6 8 6 8 1"/><path d="M24 11v3"/>'
+    };
+    function card(label,type,icon) { return `<div class="garment ${type}"><svg viewBox="0 0 48 48" aria-hidden="true">${art[icon]}</svg><span>${label}</span></div>`; }
+    function renderPreview(visual) { let cards = card('top','top',visual.top)+card('bottom','bottom',visual.bottom)+card('shoes','shoes',visual.shoes); if (visual.outer) cards += card('outer layer','outer',visual.outer); if (visual.rain) cards += card('umbrella','rain','umbrella'); document.getElementById('preview').innerHTML = `<p class="preview-label">VISUAL OUTFIT PREVIEW</p>${cards}`; }
+    function showError(message) { error.textContent=message; error.classList.add('show'); result.classList.remove('show'); }
+    function setLoading(active) { loading.classList.toggle('show',active); button.disabled=active; button.textContent=active ? 'Checking live weather…' : 'Check weather & suggest →'; }
+    function stat(label,value) { return `<div class="weather-stat"><span>${label}</span><b>${value}</b></div>`; }
+    function escapeHtml(value) { return String(value).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character])); }
+    function renderWeather(place,weather) { document.getElementById('location-name').textContent=place.name.toUpperCase(); const placeName=escapeHtml(`${place.name}${place.admin1 ? `, ${place.admin1}` : ''}`); const timezone=escapeHtml(weather.timezone); document.getElementById('weather-summary').innerHTML=`<div class="weather-place"><strong>${placeName}</strong><span>${timezone}</span></div><div class="weather-stats">${stat('Current',`${Math.round(weather.current)}°F`)}${stat('Feels like',`${Math.round(weather.feels)}°F`)}${stat('High / low',`${Math.round(weather.high)}° / ${Math.round(weather.low)}°`)}${stat('Condition',weather.condition)}${stat('Rain chance',`${Math.round(weather.precip)}%`)}${stat('Wind',`${Math.round(weather.wind)} mph`)}</div>`; }
+    async function fetchWeather(query) {
+      const geoURL = new URL('https://geocoding-api.open-meteo.com/v1/search'); geoURL.search = new URLSearchParams({name:query,count:'1',language:'en',format:'json'});
+      const geoResponse = await fetch(geoURL); if (!geoResponse.ok) throw new Error('location service'); const geo = await geoResponse.json(); if (!geo.results || !geo.results.length) throw new Error('not found');
+      const place = geo.results[0]; const weatherURL = new URL('https://api.open-meteo.com/v1/forecast'); weatherURL.search = new URLSearchParams({latitude:place.latitude,longitude:place.longitude,current:'temperature_2m,apparent_temperature,weather_code,wind_speed_10m',daily:'temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max,wind_speed_10m_max',temperature_unit:'fahrenheit',wind_speed_unit:'mph',timezone:'auto',forecast_days:'1'});
+      const forecastResponse = await fetch(weatherURL); if (!forecastResponse.ok) throw new Error('weather service'); const forecast = await forecastResponse.json(); if (!forecast.current || !forecast.daily) throw new Error('weather service');
+      return { place, weather:{ current:forecast.current.temperature_2m,feels:forecast.current.apparent_temperature,high:forecast.daily.temperature_2m_max[0],low:forecast.daily.temperature_2m_min[0],precip:forecast.daily.precipitation_probability_max[0] ?? 0,wind:forecast.current.wind_speed_10m,windMax:forecast.daily.wind_speed_10m_max[0] ?? forecast.current.wind_speed_10m,code:forecast.current.weather_code,condition:weatherLabels[forecast.current.weather_code] || 'Current conditions',timezone:forecast.timezone_abbreviation || forecast.timezone } };
+    }
+    form.addEventListener('submit', async event => {
+      event.preventDefault(); const query=locationInput.value.trim(); error.classList.remove('show');
+      if (!query) { showError('Enter a city and state, such as “New York, NY,” or a ZIP code.'); locationInput.focus(); return; }
+      setLoading(true);
+      try { const {place,weather}=await fetchWeather(query); const occasion=document.querySelector('input[name="occasion"]:checked').value; const outfit=outfitFor(weather,occasion); renderWeather(place,weather); document.getElementById('result-title').textContent=outfit.title; document.getElementById('pieces').innerHTML=outfit.items.map(item=>`<span>${item}</span>`).join(''); document.getElementById('explanation').textContent=outfit.explanation; renderPreview(outfit.visual); result.classList.remove('show'); void result.offsetWidth; result.classList.add('show'); result.scrollIntoView({behavior:'smooth',block:'center'}); }
+      catch (problem) { showError(problem.message==='not found' ? 'We could not find that location. Try a city and state or a ZIP code.' : 'We could not reach the live weather service. Check your internet connection and try again.'); }
+      finally { setLoading(false); }
+    });
+  </script>
+</body>
+</html>
